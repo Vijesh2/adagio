@@ -201,7 +201,7 @@ def get(key: str | None = None):
                 Button("Create"),
                 method="post",
                 action="/admin/participants",
-                cls="form-row",
+                cls="form-row create-participant-form",
             )
         ),
         card(table(["Name", "Status", "Invite link", "Action"], rows)),

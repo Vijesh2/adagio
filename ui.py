@@ -123,17 +123,19 @@ input[type="checkbox"] { min-height: auto; width: auto; }
 .score-input { width: 4.5rem; }
 .compact-score {
     border-radius: 4px;
-    font-size: .9rem;
+    font-size: .82rem;
     font-weight: 800;
-    height: 1.25rem;
+    height: .85rem;
     line-height: 1;
-    min-height: 1.25rem;
+    min-height: .85rem;
     padding: 0 .15rem;
     text-align: center;
-    width: 2.15rem;
+    width: 1.9rem;
 }
 .form-row { align-items: end; display: flex; flex-wrap: wrap; gap: .75rem; }
 .form-row label { display: grid; gap: .25rem; font-size: .9rem; font-weight: 700; }
+.create-participant-form { align-items: center; }
+.create-participant-form label { width: 16rem; }
 .actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
 .danger { color: var(--accent-2); font-weight: 700; }
 .ok { color: var(--good); font-weight: 700; }
@@ -151,10 +153,10 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     border-bottom: 1px solid #dde5db;
     display: grid;
     gap: .3rem;
-    grid-template-columns: minmax(8rem, 1fr) 2.15rem 1rem 2.15rem minmax(8rem, 1fr) minmax(9rem, auto);
+    grid-template-columns: minmax(8rem, 1fr) 1.9rem 1rem 1.9rem minmax(8rem, 1fr) minmax(9rem, auto);
     line-height: 1.1;
-    min-height: 1.95rem;
-    padding: .18rem .7rem;
+    min-height: 1.55rem;
+    padding: .12rem .7rem;
 }
 
 .prediction-row:last-child { border-bottom: 0; }
@@ -181,14 +183,14 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     .topbar { align-items: stretch; flex-direction: column; }
     table { display: block; overflow-x: auto; }
     .prediction-row {
-        grid-template-columns: minmax(6rem, 1fr) 2.1rem 1rem 2.1rem minmax(6rem, 1fr);
+        grid-template-columns: minmax(6rem, 1fr) 1.85rem 1rem 1.85rem minmax(6rem, 1fr);
     }
     .match-meta {
         grid-column: 1 / -1;
         order: -1;
         text-align: left;
     }
-    .compact-score { width: 2.1rem; }
+    .compact-score { width: 1.85rem; }
 }
 """
 
