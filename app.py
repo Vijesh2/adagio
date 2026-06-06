@@ -380,27 +380,49 @@ def get(token: str):
 
 
 @rt("/p/{token}/predict/{stage}")
-def get(token: str, stage: str):
+def get(token: str, stage: str, sort: str | None = "date"):
     participant = participant_or_404(token)
     if not participant:
         return layout(page_header("Invite not found"))
     if stage not in STAGES:
         return layout(page_header("Unknown stage"), nav=nav_participant(token))
+    sort = sort if sort in {"date", "group"} else "date"
+    order = "f.group_code, f.display_order" if sort == "group" else "f.kickoff_utc, f.display_order"
     with conn() as c:
         locked = db.stage_is_locked(c, stage)
         fixtures = c.execute(
-            """
+            f"""
             SELECT f.*, p.predicted_home, p.predicted_away, p.predicted_advancer
             FROM fixtures f
             LEFT JOIN predictions p ON p.fixture_id = f.id AND p.participant_id = ?
             WHERE f.stage = ?
-            ORDER BY f.display_order
+            ORDER BY {order}
             """,
             (participant["id"], stage),
         ).fetchall()
-    controls = []
+    controls = [
+        card(
+            Div(
+                A("Sort by date", href=f"/p/{token}/predict/{stage}?sort=date", cls="button secondary"),
+                A("Sort by group", href=f"/p/{token}/predict/{stage}?sort=group", cls="button secondary"),
+                cls="actions",
+            )
+        )
+    ]
     needs_advancer = stage != "group"
     for fixture in fixtures:
+        if stage == "group":
+            controls.append(
+                Div(
+                    Span(fixture["home_team"], cls="team-home"),
+                    Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="compact-score", aria_label=f"{fixture['home_team']} score"),
+                    Input(type="number", name=f"away_{fixture['id']}", min="0", value="" if fixture["predicted_away"] is None else fixture["predicted_away"], disabled=locked, cls="compact-score", aria_label=f"{fixture['away_team']} score"),
+                    Span(fixture["away_team"], cls="team-away"),
+                    Span(Span(f"Group {fixture['group_code']}", cls="group-label"), kickoff_label(fixture["kickoff_utc"]), cls="match-meta"),
+                    cls="prediction-row",
+                )
+            )
+            continue
         tied_help = "Advancer is only needed for tied knockout predictions."
         inputs = [
             Label(fixture["home_team"], Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="score-input")),
@@ -417,9 +439,10 @@ def get(token: str, stage: str):
                 Div(*inputs, cls="form-row"),
             )
         )
+    prediction_controls = Div(*controls[1:], cls="prediction-list") if stage == "group" else Div(*controls[1:], cls="grid")
     return layout(
         page_header(STAGE_LABELS[stage], "This stage is locked." if locked else "Enter scores before the stage locks."),
-        Form(*controls, Button("Save predictions", disabled=locked), method="post", action=f"/p/{token}/predict/{stage}"),
+        Form(controls[0], prediction_controls, Button("Save predictions", disabled=locked), method="post", action=f"/p/{token}/predict/{stage}"),
         nav=nav_participant(token),
     )
 
