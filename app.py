@@ -75,7 +75,23 @@ def redirect(url: str):
 def parse_int(value: str | None) -> int | None:
     if value is None or value == "":
         return None
+    if not value.isdigit():
+        raise ValueError("Scores must be non-negative whole numbers.")
     return int(value)
+
+
+def score_input(name: str, value, label: str, cls: str = "score-input", disabled: bool = False):
+    return Input(
+        type="text",
+        name=name,
+        value="" if value is None else value,
+        inputmode="numeric",
+        pattern="[0-9]*",
+        title="Enter a non-negative whole number",
+        disabled=disabled,
+        cls=cls,
+        aria_label=label,
+    )
 
 
 def kickoff_label(iso_value: str) -> str:
@@ -215,8 +231,8 @@ def get(key: str | None = None, stage: str | None = None):
                 Td(
                     Form(
                         Input(type="hidden", name="key", value=key),
-                        Input(type="number", name="actual_home", value="" if fixture["actual_home"] is None else fixture["actual_home"], min="0", cls="score-input"),
-                        Input(type="number", name="actual_away", value="" if fixture["actual_away"] is None else fixture["actual_away"], min="0", cls="score-input"),
+                        score_input("actual_home", fixture["actual_home"], f"{fixture['home_team']} actual score"),
+                        score_input("actual_away", fixture["actual_away"], f"{fixture['away_team']} actual score"),
                         Input(name="actual_advancer", value=fixture["actual_advancer"] or "", placeholder="Advancer"),
                         Button("Save"),
                         method="post",
@@ -251,13 +267,16 @@ async def post(fixture_id: str, request):
         return admin_gate(key)
     with conn() as c:
         fixture = c.execute("SELECT stage FROM fixtures WHERE id = ?", (fixture_id,)).fetchone()
-        db.set_actual_result(
-            c,
-            fixture_id,
-            parse_int(form.get("actual_home")),
-            parse_int(form.get("actual_away")),
-            (form.get("actual_advancer") or "").strip() or None,
-        )
+        try:
+            db.set_actual_result(
+                c,
+                fixture_id,
+                parse_int(form.get("actual_home")),
+                parse_int(form.get("actual_away")),
+                (form.get("actual_advancer") or "").strip() or None,
+            )
+        except ValueError as exc:
+            return layout(page_header("Invalid score", str(exc)), nav=nav_admin(key))
     return redirect(f"/admin/results?key={key}&stage={fixture['stage'] if fixture else 'group'}")
 
 
@@ -415,9 +434,9 @@ def get(token: str, stage: str, sort: str | None = "date"):
             controls.append(
                 Div(
                     Span(fixture["home_team"], cls="team-home"),
-                    Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="compact-score", aria_label=f"{fixture['home_team']} score"),
+                    score_input(f"home_{fixture['id']}", fixture["predicted_home"], f"{fixture['home_team']} score", cls="compact-score", disabled=locked),
                     Span("v", cls="score-separator"),
-                    Input(type="number", name=f"away_{fixture['id']}", min="0", value="" if fixture["predicted_away"] is None else fixture["predicted_away"], disabled=locked, cls="compact-score", aria_label=f"{fixture['away_team']} score"),
+                    score_input(f"away_{fixture['id']}", fixture["predicted_away"], f"{fixture['away_team']} score", cls="compact-score", disabled=locked),
                     Span(fixture["away_team"], cls="team-away"),
                     Span(Span(f"Group {fixture['group_code']}", cls="group-label"), kickoff_label(fixture["kickoff_utc"]), cls="match-meta"),
                     cls="prediction-row",
@@ -426,8 +445,8 @@ def get(token: str, stage: str, sort: str | None = "date"):
             continue
         tied_help = "Advancer is only needed for tied knockout predictions."
         inputs = [
-            Label(fixture["home_team"], Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="score-input")),
-            Label(fixture["away_team"], Input(type="number", name=f"away_{fixture['id']}", min="0", value="" if fixture["predicted_away"] is None else fixture["predicted_away"], disabled=locked, cls="score-input")),
+            Label(fixture["home_team"], score_input(f"home_{fixture['id']}", fixture["predicted_home"], f"{fixture['home_team']} score", disabled=locked)),
+            Label(fixture["away_team"], score_input(f"away_{fixture['id']}", fixture["predicted_away"], f"{fixture['away_team']} score", disabled=locked)),
         ]
         if needs_advancer:
             inputs.append(
@@ -456,15 +475,18 @@ async def post(token: str, stage: str, request):
     form = await request.form()
     with conn() as c:
         fixtures = db.fixtures_for_stage(c, stage)
-        for fixture in fixtures:
-            db.upsert_prediction(
-                c,
-                participant["id"],
-                fixture["id"],
-                parse_int(form.get(f"home_{fixture['id']}")),
-                parse_int(form.get(f"away_{fixture['id']}")),
-                (form.get(f"adv_{fixture['id']}") or "").strip() or None,
-            )
+        try:
+            for fixture in fixtures:
+                db.upsert_prediction(
+                    c,
+                    participant["id"],
+                    fixture["id"],
+                    parse_int(form.get(f"home_{fixture['id']}")),
+                    parse_int(form.get(f"away_{fixture['id']}")),
+                    (form.get(f"adv_{fixture['id']}") or "").strip() or None,
+                )
+        except ValueError as exc:
+            return layout(page_header("Invalid score", str(exc)), nav=nav_participant(token))
     return redirect(f"/p/{token}/fixtures")
 
 

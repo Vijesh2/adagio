@@ -122,14 +122,15 @@ input, select {
 input[type="checkbox"] { min-height: auto; width: auto; }
 .score-input { width: 4.5rem; }
 .compact-score {
-    font-size: .95rem;
+    border-radius: 4px;
+    font-size: .9rem;
     font-weight: 800;
-    height: 1.45rem;
+    height: 1.25rem;
     line-height: 1;
-    min-height: 1.45rem;
-    padding: .05rem .2rem;
+    min-height: 1.25rem;
+    padding: 0 .15rem;
     text-align: center;
-    width: 2.65rem;
+    width: 2.15rem;
 }
 .form-row { align-items: end; display: flex; flex-wrap: wrap; gap: .75rem; }
 .form-row label { display: grid; gap: .25rem; font-size: .9rem; font-weight: 700; }
@@ -150,7 +151,7 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     border-bottom: 1px solid #dde5db;
     display: grid;
     gap: .3rem;
-    grid-template-columns: minmax(8rem, 1fr) 2.65rem 1rem 2.65rem minmax(8rem, 1fr) minmax(9rem, auto);
+    grid-template-columns: minmax(8rem, 1fr) 2.15rem 1rem 2.15rem minmax(8rem, 1fr) minmax(9rem, auto);
     line-height: 1.1;
     min-height: 1.95rem;
     padding: .18rem .7rem;
@@ -180,14 +181,14 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     .topbar { align-items: stretch; flex-direction: column; }
     table { display: block; overflow-x: auto; }
     .prediction-row {
-        grid-template-columns: minmax(6rem, 1fr) 2.55rem 1rem 2.55rem minmax(6rem, 1fr);
+        grid-template-columns: minmax(6rem, 1fr) 2.1rem 1rem 2.1rem minmax(6rem, 1fr);
     }
     .match-meta {
         grid-column: 1 / -1;
         order: -1;
         text-align: left;
     }
-    .compact-score { width: 2.55rem; }
+    .compact-score { width: 2.1rem; }
 }
 """
 
