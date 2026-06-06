@@ -133,7 +133,9 @@ input.compact-score {
     max-height: 1.35rem;
     min-height: 0;
     padding: 0 .1rem;
+    position: relative;
     text-align: center;
+    top: .08rem;
     vertical-align: middle;
     width: 1.9rem;
 }
