@@ -128,9 +128,9 @@ input.compact-score {
     display: block;
     font-size: .82rem;
     font-weight: 800;
-    height: 1.05rem;
-    line-height: 1.05rem;
-    max-height: 1.05rem;
+    height: 1.35rem;
+    line-height: normal;
+    max-height: 1.35rem;
     min-height: 0;
     padding: 0 .1rem;
     text-align: center;
@@ -160,8 +160,8 @@ input.compact-score {
     gap: .3rem;
     grid-template-columns: minmax(10rem, 1fr) 2rem 1rem 2rem minmax(10rem, 1fr) minmax(9rem, auto);
     line-height: 1.1;
-    min-height: 1.25rem;
-    padding: .06rem .7rem;
+    min-height: 1.7rem;
+    padding: .08rem .7rem;
 }
 
 .prediction-row:last-child { border-bottom: 0; }
@@ -170,7 +170,7 @@ input.compact-score {
 .team-home, .team-away, .score-separator, .score-cell {
     align-items: center;
     display: flex;
-    height: 1.1rem;
+    min-height: 1.35rem;
 }
 .team-home, .team-away {
     font-size: .95rem;
