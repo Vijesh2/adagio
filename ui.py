@@ -122,10 +122,14 @@ input, select {
 input[type="checkbox"] { min-height: auto; width: auto; }
 .score-input { width: 4.5rem; }
 .compact-score {
-    min-height: 1.7rem;
-    padding: .15rem .25rem;
+    font-size: .95rem;
+    font-weight: 800;
+    height: 1.45rem;
+    line-height: 1;
+    min-height: 1.45rem;
+    padding: .05rem .2rem;
     text-align: center;
-    width: 3.2rem;
+    width: 2.65rem;
 }
 .form-row { align-items: end; display: flex; flex-wrap: wrap; gap: .75rem; }
 .form-row label { display: grid; gap: .25rem; font-size: .9rem; font-weight: 700; }
@@ -143,32 +147,47 @@ input[type="checkbox"] { min-height: auto; width: auto; }
 
 .prediction-row {
     align-items: center;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid #dde5db;
     display: grid;
-    gap: .35rem;
-    grid-template-columns: minmax(8rem, 1fr) 3.2rem 3.2rem minmax(8rem, 1fr) minmax(9rem, auto);
-    min-height: 2.45rem;
-    padding: .22rem .65rem;
+    gap: .3rem;
+    grid-template-columns: minmax(8rem, 1fr) 2.65rem 1rem 2.65rem minmax(8rem, 1fr) minmax(9rem, auto);
+    line-height: 1.1;
+    min-height: 1.95rem;
+    padding: .18rem .7rem;
 }
 
 .prediction-row:last-child { border-bottom: 0; }
-.team-home { font-weight: 800; text-align: right; }
-.team-away { font-weight: 800; }
-.match-meta { color: var(--muted); font-size: .9rem; text-align: right; }
+.prediction-row:nth-child(even) { background: #fbfcfb; }
+.prediction-row:hover { background: #eef6f1; }
+.team-home, .team-away {
+    font-size: .95rem;
+    font-weight: 800;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.team-home { text-align: right; }
+.score-separator {
+    color: var(--muted);
+    font-size: .8rem;
+    font-weight: 800;
+    text-align: center;
+}
+.match-meta { color: var(--muted); font-size: .82rem; text-align: right; white-space: nowrap; }
 .group-label { color: var(--text); font-weight: 800; margin-right: .35rem; }
 
 @media (max-width: 720px) {
     .topbar { align-items: stretch; flex-direction: column; }
     table { display: block; overflow-x: auto; }
     .prediction-row {
-        grid-template-columns: minmax(6rem, 1fr) 3.1rem 3.1rem minmax(6rem, 1fr);
+        grid-template-columns: minmax(6rem, 1fr) 2.55rem 1rem 2.55rem minmax(6rem, 1fr);
     }
     .match-meta {
         grid-column: 1 / -1;
         order: -1;
         text-align: left;
     }
-    .compact-score { width: 3.1rem; }
+    .compact-score { width: 2.55rem; }
 }
 """
 

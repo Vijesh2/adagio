@@ -416,6 +416,7 @@ def get(token: str, stage: str, sort: str | None = "date"):
                 Div(
                     Span(fixture["home_team"], cls="team-home"),
                     Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="compact-score", aria_label=f"{fixture['home_team']} score"),
+                    Span("v", cls="score-separator"),
                     Input(type="number", name=f"away_{fixture['id']}", min="0", value="" if fixture["predicted_away"] is None else fixture["predicted_away"], disabled=locked, cls="compact-score", aria_label=f"{fixture['away_team']} score"),
                     Span(fixture["away_team"], cls="team-away"),
                     Span(Span(f"Group {fixture['group_code']}", cls="group-label"), kickoff_label(fixture["kickoff_utc"]), cls="match-meta"),
