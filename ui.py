@@ -135,7 +135,7 @@ input.compact-score {
     padding: 0 .1rem;
     position: relative;
     text-align: center;
-    top: .08rem;
+    top: .22rem;
     vertical-align: middle;
     width: 1.9rem;
 }
@@ -156,7 +156,7 @@ input.compact-score {
 }
 
 .prediction-row {
-    align-items: center;
+    align-items: baseline;
     border-bottom: 1px solid #dde5db;
     display: grid;
     gap: .3rem;
@@ -170,7 +170,7 @@ input.compact-score {
 .prediction-row:nth-child(even) { background: #fbfcfb; }
 .prediction-row:hover { background: #eef6f1; }
 .team-home, .team-away, .score-separator, .score-cell {
-    align-items: center;
+    align-items: flex-end;
     display: flex;
     min-height: 1.35rem;
 }
