@@ -196,6 +196,7 @@ input.compact-score {
     line-height: 1.35rem;
     padding: 0;
     text-align: center;
+    transform: translateY(1px);
 }
 .match-meta { color: var(--muted); font-size: .82rem; text-align: right; white-space: nowrap; }
 .group-label { color: var(--text); font-weight: 800; margin-right: .35rem; }
