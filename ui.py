@@ -135,7 +135,6 @@ input.compact-score {
     padding: 0 .1rem;
     position: relative;
     text-align: center;
-    top: .22rem;
     vertical-align: middle;
     width: 1.9rem;
 }
@@ -162,17 +161,17 @@ input.compact-score {
     gap: .3rem;
     grid-template-columns: minmax(10rem, 1fr) 2rem 1rem 2rem minmax(10rem, 1fr) minmax(9rem, auto);
     line-height: 1.1;
-    min-height: 1.7rem;
-    padding: .08rem .7rem;
+    min-height: 2rem;
+    padding: .15rem .7rem;
 }
 
 .prediction-row:last-child { border-bottom: 0; }
 .prediction-row:nth-child(even) { background: #fbfcfb; }
 .prediction-row:hover { background: #eef6f1; }
 .team-home, .team-away, .score-separator, .score-cell {
-    align-items: flex-end;
+    align-items: center;
     display: flex;
-    min-height: 1.35rem;
+    min-height: 1.7rem;
 }
 .team-home, .team-away {
     font-size: .95rem;
@@ -191,6 +190,13 @@ input.compact-score {
     text-align: center;
 }
 .score-cell { justify-content: center; }
+.score-cell input {
+    box-sizing: border-box;
+    height: 1.35rem;
+    line-height: 1.35rem;
+    padding: 0;
+    text-align: center;
+}
 .match-meta { color: var(--muted); font-size: .82rem; text-align: right; white-space: nowrap; }
 .group-label { color: var(--text); font-weight: 800; margin-right: .35rem; }
 
