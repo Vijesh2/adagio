@@ -124,15 +124,17 @@ input[type="checkbox"] { min-height: auto; width: auto; }
 input.compact-score {
     appearance: none;
     border-radius: 4px;
+    box-sizing: border-box;
     display: block;
     font-size: .82rem;
     font-weight: 800;
-    height: 1rem;
-    line-height: 1rem;
-    max-height: 1rem;
+    height: 1.05rem;
+    line-height: 1.05rem;
+    max-height: 1.05rem;
     min-height: 0;
     padding: 0 .1rem;
     text-align: center;
+    vertical-align: middle;
     width: 1.9rem;
 }
 .form-row { align-items: end; display: flex; flex-wrap: wrap; gap: .75rem; }
@@ -156,7 +158,7 @@ input.compact-score {
     border-bottom: 1px solid #dde5db;
     display: grid;
     gap: .3rem;
-    grid-template-columns: minmax(8rem, 1fr) 1.9rem 1rem 1.9rem minmax(8rem, 1fr) minmax(9rem, auto);
+    grid-template-columns: minmax(10rem, 1fr) 2rem 1rem 2rem minmax(10rem, 1fr) minmax(9rem, auto);
     line-height: 1.1;
     min-height: 1.25rem;
     padding: .06rem .7rem;
@@ -165,10 +167,10 @@ input.compact-score {
 .prediction-row:last-child { border-bottom: 0; }
 .prediction-row:nth-child(even) { background: #fbfcfb; }
 .prediction-row:hover { background: #eef6f1; }
-.team-home, .team-away, .score-separator {
+.team-home, .team-away, .score-separator, .score-cell {
     align-items: center;
     display: flex;
-    height: 1rem;
+    height: 1.1rem;
 }
 .team-home, .team-away {
     font-size: .95rem;
@@ -186,6 +188,7 @@ input.compact-score {
     justify-content: center;
     text-align: center;
 }
+.score-cell { justify-content: center; }
 .match-meta { color: var(--muted); font-size: .82rem; text-align: right; white-space: nowrap; }
 .group-label { color: var(--text); font-weight: 800; margin-right: .35rem; }
 
@@ -193,7 +196,7 @@ input.compact-score {
     .topbar { align-items: stretch; flex-direction: column; }
     table { display: block; overflow-x: auto; }
     .prediction-row {
-        grid-template-columns: minmax(6rem, 1fr) 1.85rem 1rem 1.85rem minmax(6rem, 1fr);
+        grid-template-columns: minmax(6rem, 1fr) 2rem 1rem 2rem minmax(6rem, 1fr);
     }
     .match-meta {
         grid-column: 1 / -1;

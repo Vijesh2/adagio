@@ -457,9 +457,9 @@ def get(token: str, stage: str, sort: str | None = "date"):
             controls.append(
                 Div(
                     Span(fixture["home_team"], cls="team-home"),
-                    score_input(f"home_{fixture['id']}", fixture["predicted_home"], f"{fixture['home_team']} score", cls="compact-score", disabled=locked),
+                    Span(score_input(f"home_{fixture['id']}", fixture["predicted_home"], f"{fixture['home_team']} score", cls="compact-score", disabled=locked), cls="score-cell"),
                     Span("v", cls="score-separator"),
-                    score_input(f"away_{fixture['id']}", fixture["predicted_away"], f"{fixture['away_team']} score", cls="compact-score", disabled=locked),
+                    Span(score_input(f"away_{fixture['id']}", fixture["predicted_away"], f"{fixture['away_team']} score", cls="compact-score", disabled=locked), cls="score-cell"),
                     Span(fixture["away_team"], cls="team-away"),
                     Span(Span(f"Group {fixture['group_code']}", cls="group-label"), kickoff_label(fixture["kickoff_utc"]), cls="match-meta"),
                     cls="prediction-row",
