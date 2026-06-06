@@ -399,18 +399,22 @@ def get(token: str, stage: str):
             (participant["id"], stage),
         ).fetchall()
     controls = []
+    needs_advancer = stage != "group"
     for fixture in fixtures:
         tied_help = "Advancer is only needed for tied knockout predictions."
+        inputs = [
+            Label(fixture["home_team"], Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="score-input")),
+            Label(fixture["away_team"], Input(type="number", name=f"away_{fixture['id']}", min="0", value="" if fixture["predicted_away"] is None else fixture["predicted_away"], disabled=locked, cls="score-input")),
+        ]
+        if needs_advancer:
+            inputs.append(
+                Label("Advancer", Input(name=f"adv_{fixture['id']}", value=fixture["predicted_advancer"] or "", placeholder=tied_help, disabled=locked))
+            )
         controls.append(
             card(
                 H3(f"{fixture['home_team']} v {fixture['away_team']}"),
                 P(kickoff_label(fixture["kickoff_utc"]), cls="muted"),
-                Div(
-                    Label(fixture["home_team"], Input(type="number", name=f"home_{fixture['id']}", min="0", value="" if fixture["predicted_home"] is None else fixture["predicted_home"], disabled=locked, cls="score-input")),
-                    Label(fixture["away_team"], Input(type="number", name=f"away_{fixture['id']}", min="0", value="" if fixture["predicted_away"] is None else fixture["predicted_away"], disabled=locked, cls="score-input")),
-                    Label("Advancer", Input(name=f"adv_{fixture['id']}", value=fixture["predicted_advancer"] or "", placeholder=tied_help, disabled=locked)),
-                    cls="form-row",
-                ),
+                Div(*inputs, cls="form-row"),
             )
         )
     return layout(
