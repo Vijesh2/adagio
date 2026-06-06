@@ -122,9 +122,10 @@ input, select {
 input[type="checkbox"] { min-height: auto; width: auto; }
 .score-input { width: 4.5rem; }
 .compact-score {
-    min-height: 2rem;
+    min-height: 1.7rem;
+    padding: .15rem .25rem;
     text-align: center;
-    width: 3.75rem;
+    width: 3.2rem;
 }
 .form-row { align-items: end; display: flex; flex-wrap: wrap; gap: .75rem; }
 .form-row label { display: grid; gap: .25rem; font-size: .9rem; font-weight: 700; }
@@ -144,9 +145,10 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     align-items: center;
     border-bottom: 1px solid var(--border);
     display: grid;
-    gap: .5rem;
-    grid-template-columns: minmax(8rem, 1fr) 3.75rem 3.75rem minmax(8rem, 1fr) minmax(9rem, auto);
-    padding: .45rem .75rem;
+    gap: .35rem;
+    grid-template-columns: minmax(8rem, 1fr) 3.2rem 3.2rem minmax(8rem, 1fr) minmax(9rem, auto);
+    min-height: 2.45rem;
+    padding: .22rem .65rem;
 }
 
 .prediction-row:last-child { border-bottom: 0; }
@@ -159,14 +161,14 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     .topbar { align-items: stretch; flex-direction: column; }
     table { display: block; overflow-x: auto; }
     .prediction-row {
-        grid-template-columns: minmax(6rem, 1fr) 3.5rem 3.5rem minmax(6rem, 1fr);
+        grid-template-columns: minmax(6rem, 1fr) 3.1rem 3.1rem minmax(6rem, 1fr);
     }
     .match-meta {
         grid-column: 1 / -1;
         order: -1;
         text-align: left;
     }
-    .compact-score { width: 3.5rem; }
+    .compact-score { width: 3.1rem; }
 }
 """
 
