@@ -156,7 +156,7 @@ input.compact-score {
 }
 
 .prediction-row {
-    align-items: baseline;
+    align-items: center;
     border-bottom: 1px solid #dde5db;
     display: grid;
     gap: .3rem;
