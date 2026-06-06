@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+.sesskey
+.env
+.env.*
+!.env.example
+*.pyc
+*.sqlite
+*.sqlite3
+data/*.sqlite3
