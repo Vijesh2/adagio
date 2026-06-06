@@ -18,6 +18,13 @@ def test_database_path_prefers_railway_volume(monkeypatch):
     assert db.database_path() == Path("/data/adagio.sqlite3")
 
 
+def test_database_path_uses_data_on_railway_without_volume_env(monkeypatch):
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("RAILWAY_VOLUME_MOUNT_PATH", raising=False)
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_ID", "env_123")
+    assert db.database_path() == Path("/data/adagio.sqlite3")
+
+
 def test_prediction_flow_and_locking(tmp_path):
     conn = db.connect(tmp_path / "test.sqlite3")
     db.init_db(conn)

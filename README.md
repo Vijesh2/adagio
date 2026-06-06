@@ -25,8 +25,8 @@ APP_BASE_URL=https://<your Railway public domain>
 Recommended persistent storage:
 
 1. Add a Railway volume to the app service.
-2. Mount it at any path, for example `/data`.
-3. Leave `DATABASE_URL` unset. The app will store SQLite at `$RAILWAY_VOLUME_MOUNT_PATH/adagio.sqlite3`.
+2. Mount it at `/data`.
+3. Leave `DATABASE_URL` unset. The app will store SQLite at `/data/adagio.sqlite3`.
 
 If you prefer an explicit path, set:
 

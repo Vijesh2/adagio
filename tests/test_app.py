@@ -108,3 +108,22 @@ def test_prediction_submit_rejects_invalid_score(tmp_path, monkeypatch):
     )
     assert response.status_code == 200
     assert "Invalid score" in response.text
+
+
+def test_prediction_submit_saves_and_rerenders_values(tmp_path, monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", str(tmp_path / "valid-score.sqlite3"))
+    app_module = importlib.reload(sys.modules["app"]) if "app" in sys.modules else importlib.import_module("app")
+    with app_module.conn() as c:
+        token = app_module.db.create_participant(c, "Jo")
+        fixture = c.execute("SELECT id FROM fixtures WHERE stage = 'group' ORDER BY display_order LIMIT 1").fetchone()
+    client = TestClient(app_module.app)
+    response = client.post(
+        f"/p/{token}/predict/group",
+        data={f"home_{fixture['id']}": "2", f"away_{fixture['id']}": "1"},
+    )
+    assert response.status_code == 200
+    assert 'value="2"' in response.text
+    assert 'value="1"' in response.text
+    with app_module.conn() as c:
+        saved = c.execute("SELECT predicted_home, predicted_away FROM predictions").fetchone()
+    assert dict(saved) == {"predicted_home": 2, "predicted_away": 1}

@@ -16,12 +16,26 @@ THIRD_PLACE_MAPPING_PATH = DATA_DIR / "third_place_mapping.json"
 
 
 def database_path() -> Path:
-    volume_path = os.getenv("RAILWAY_VOLUME_MOUNT_PATH")
-    default_path = Path(volume_path) / "adagio.sqlite3" if volume_path else DATA_DIR / "adagio.sqlite3"
-    configured = os.getenv("DATABASE_URL", str(default_path))
+    if configured := os.getenv("DATABASE_URL"):
+        if configured.startswith("sqlite:///"):
+            configured = configured.removeprefix("sqlite:///")
+        return Path(configured)
+    if volume_path := os.getenv("RAILWAY_VOLUME_MOUNT_PATH"):
+        return Path(volume_path) / "adagio.sqlite3"
+    if os.getenv("RAILWAY_ENVIRONMENT_ID"):
+        return Path("/data/adagio.sqlite3")
+    configured = str(DATA_DIR / "adagio.sqlite3")
     if configured.startswith("sqlite:///"):
         configured = configured.removeprefix("sqlite:///")
     return Path(configured)
+
+
+def persistence_warning() -> str | None:
+    if not os.getenv("RAILWAY_ENVIRONMENT_ID"):
+        return None
+    if os.getenv("DATABASE_URL") or os.getenv("RAILWAY_VOLUME_MOUNT_PATH") or Path("/data").is_dir():
+        return None
+    return "Railway persistence warning: attach a volume mounted at /data or set DATABASE_URL, otherwise participants will be lost on redeploy."
 
 
 def connect(path: Path | None = None) -> sqlite3.Connection:

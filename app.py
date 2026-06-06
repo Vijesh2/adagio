@@ -84,7 +84,7 @@ def score_input(name: str, value, label: str, cls: str = "score-input", disabled
     return Input(
         type="text",
         name=name,
-        value="" if value is None else value,
+        value="" if value is None else str(value),
         inputmode="numeric",
         pattern="[0-9]*",
         title="Enter a non-negative whole number",
@@ -151,8 +151,11 @@ def get(key: str | None = None):
             "results": c.execute("SELECT COUNT(*) AS n FROM fixtures WHERE actual_home IS NOT NULL AND actual_away IS NOT NULL").fetchone()["n"],
         }
         locks = c.execute("SELECT * FROM stage_locks ORDER BY CASE stage " + " ".join([f"WHEN '{s}' THEN {i}" for i, s in enumerate(STAGES)]) + " END").fetchall()
+    warning = db.persistence_warning()
+    warning_card = card(P(warning, cls="warn")) if warning else None
     return layout(
         page_header("Admin", "Manage participants, locks, results, and generated knockout fixtures."),
+        *([warning_card] if warning_card else []),
         Div(
             card(Div(str(stats["participants"]), cls="stat"), P("active participants", cls="muted")),
             card(Div(str(stats["results"]), cls="stat"), P("results entered", cls="muted")),
@@ -192,8 +195,11 @@ def get(key: str | None = None):
                 ),
             ]
         )
+    warning = db.persistence_warning()
+    warning_card = card(P(warning, cls="warn")) if warning else None
     return layout(
         page_header("Participants", "Create simple private links for the pool."),
+        *([warning_card] if warning_card else []),
         card(
             Form(
                 Label("Name", Input(name="name", required=True)),
@@ -504,7 +510,7 @@ async def post(token: str, stage: str, request):
                 )
         except ValueError as exc:
             return layout(page_header("Invalid score", str(exc)), nav=nav_participant(token))
-    return redirect(f"/p/{token}/fixtures")
+    return redirect(f"/p/{token}/predict/{stage}")
 
 
 if __name__ == "__main__":

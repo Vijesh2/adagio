@@ -121,9 +121,10 @@ input, select {
 
 input[type="checkbox"] { min-height: auto; width: auto; }
 .score-input { width: 4.5rem; }
-.compact-score {
+input.compact-score {
     appearance: none;
     border-radius: 4px;
+    display: block;
     font-size: .82rem;
     font-weight: 800;
     height: 1rem;
@@ -164,6 +165,11 @@ input[type="checkbox"] { min-height: auto; width: auto; }
 .prediction-row:last-child { border-bottom: 0; }
 .prediction-row:nth-child(even) { background: #fbfcfb; }
 .prediction-row:hover { background: #eef6f1; }
+.team-home, .team-away, .score-separator {
+    align-items: center;
+    display: flex;
+    height: 1rem;
+}
 .team-home, .team-away {
     font-size: .95rem;
     font-weight: 800;
@@ -171,11 +177,13 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.team-home { text-align: right; }
+.team-home { justify-content: flex-end; text-align: right; }
+.team-away { justify-content: flex-start; }
 .score-separator {
     color: var(--muted);
     font-size: .8rem;
     font-weight: 800;
+    justify-content: center;
     text-align: center;
 }
 .match-meta { color: var(--muted); font-size: .82rem; text-align: right; white-space: nowrap; }
