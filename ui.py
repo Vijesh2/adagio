@@ -122,13 +122,15 @@ input, select {
 input[type="checkbox"] { min-height: auto; width: auto; }
 .score-input { width: 4.5rem; }
 .compact-score {
+    appearance: none;
     border-radius: 4px;
     font-size: .82rem;
     font-weight: 800;
-    height: .85rem;
-    line-height: 1;
-    min-height: .85rem;
-    padding: 0 .15rem;
+    height: 1rem;
+    line-height: 1rem;
+    max-height: 1rem;
+    min-height: 0;
+    padding: 0 .1rem;
     text-align: center;
     width: 1.9rem;
 }
@@ -155,8 +157,8 @@ input[type="checkbox"] { min-height: auto; width: auto; }
     gap: .3rem;
     grid-template-columns: minmax(8rem, 1fr) 1.9rem 1rem 1.9rem minmax(8rem, 1fr) minmax(9rem, auto);
     line-height: 1.1;
-    min-height: 1.55rem;
-    padding: .12rem .7rem;
+    min-height: 1.25rem;
+    padding: .06rem .7rem;
 }
 
 .prediction-row:last-child { border-bottom: 0; }
