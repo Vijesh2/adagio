@@ -17,6 +17,46 @@ def test_home_and_admin_smoke(tmp_path, monkeypatch):
     assert "participants" in admin.text.lower()
 
 
+def test_admin_participants_is_name_only(tmp_path, monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", str(tmp_path / "participants-admin.sqlite3"))
+    monkeypatch.setenv("ADMIN_PASSWORD", "secret")
+    app_module = importlib.reload(sys.modules["app"]) if "app" in sys.modules else importlib.import_module("app")
+    client = TestClient(app_module.app)
+    response = client.get("/admin/participants?key=secret")
+    assert response.status_code == 200
+    assert 'name="name"' in response.text
+    assert 'name="email"' not in response.text
+    assert "<th>Email</th>" not in response.text
+
+
+def test_admin_can_deactivate_and_reactivate_participant(tmp_path, monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", str(tmp_path / "participant-active.sqlite3"))
+    monkeypatch.setenv("ADMIN_PASSWORD", "secret")
+    app_module = importlib.reload(sys.modules["app"]) if "app" in sys.modules else importlib.import_module("app")
+    with app_module.conn() as c:
+        token = app_module.db.create_participant(c, "Nadine")
+        participant = c.execute("SELECT id FROM participants WHERE token = ?", (token,)).fetchone()
+    client = TestClient(app_module.app)
+    assert "Nadine" in client.get(f"/p/{token}").text
+
+    response = client.post(
+        f"/admin/participants/{participant['id']}/active",
+        data={"key": "secret", "active": "0"},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    assert "Invite not found" in client.get(f"/p/{token}").text
+    assert "Nadine" not in client.get(f"/p/{token}/leaderboard").text
+
+    response = client.post(
+        f"/admin/participants/{participant['id']}/active",
+        data={"key": "secret", "active": "1"},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    assert "Nadine" in client.get(f"/p/{token}").text
+
+
 def test_participant_route_smoke(tmp_path, monkeypatch):
     monkeypatch.setenv("DATABASE_URL", str(tmp_path / "participant.sqlite3"))
     app_module = importlib.reload(sys.modules["app"]) if "app" in sys.modules else importlib.import_module("app")

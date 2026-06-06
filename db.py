@@ -184,6 +184,11 @@ def create_participant(conn: sqlite3.Connection, name: str, email: str | None = 
     return token
 
 
+def set_participant_active(conn: sqlite3.Connection, participant_id: int, active: bool) -> None:
+    conn.execute("UPDATE participants SET active = ? WHERE id = ?", (1 if active else 0, participant_id))
+    conn.commit()
+
+
 def fixture_rows(conn: sqlite3.Connection, sort: str = "date") -> list[sqlite3.Row]:
     order = "stage, group_code, display_order" if sort == "group" else "kickoff_utc, display_order"
     return list(conn.execute(f"SELECT * FROM fixtures ORDER BY {order}"))

@@ -177,12 +177,19 @@ def get(key: str | None = None):
     rows = []
     for participant in participants:
         invite = f"{base_url}/p/{participant['token']}" if base_url else f"/p/{participant['token']}"
+        next_active = 0 if participant["active"] else 1
         rows.append(
             [
                 participant["name"],
-                participant["email"] or "",
                 "active" if participant["active"] else "inactive",
                 A(invite, href=invite),
+                Form(
+                    Input(type="hidden", name="key", value=key),
+                    Input(type="hidden", name="active", value=str(next_active)),
+                    Button("Deactivate" if participant["active"] else "Reactivate"),
+                    method="post",
+                    action=f"/admin/participants/{participant['id']}/active",
+                ),
             ]
         )
     return layout(
@@ -190,7 +197,6 @@ def get(key: str | None = None):
         card(
             Form(
                 Label("Name", Input(name="name", required=True)),
-                Label("Email", Input(name="email", type="email")),
                 Input(type="hidden", name="key", value=key),
                 Button("Create"),
                 method="post",
@@ -198,7 +204,7 @@ def get(key: str | None = None):
                 cls="form-row",
             )
         ),
-        card(table(["Name", "Email", "Status", "Invite link"], rows)),
+        card(table(["Name", "Status", "Invite link", "Action"], rows)),
         nav=nav_admin(key),
     )
 
@@ -210,7 +216,18 @@ async def post(request):
     if not admin_ok(key):
         return admin_gate(key)
     with conn() as c:
-        db.create_participant(c, form.get("name", ""), form.get("email"))
+        db.create_participant(c, form.get("name", ""))
+    return redirect(f"/admin/participants?key={key}")
+
+
+@rt("/admin/participants/{participant_id}/active")
+async def post(participant_id: int, request):
+    form = await request.form()
+    key = form.get("key")
+    if not admin_ok(key):
+        return admin_gate(key)
+    with conn() as c:
+        db.set_participant_active(c, participant_id, form.get("active") == "1")
     return redirect(f"/admin/participants?key={key}")
 
 
